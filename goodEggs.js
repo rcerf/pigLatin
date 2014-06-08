@@ -64,7 +64,7 @@ var checkVowel = function(letter){
   return vowelRegex.test(letter);
 }
 
-
+// testing function
 var assertEqual = function(resultString, expectedString){
   var report = resultString + " SHOULD EQUAL " + expectedString + "\n";
   if(resultString === expectedString){
