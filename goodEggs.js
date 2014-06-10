@@ -6,7 +6,7 @@ var pigLatin = function(str){
 
 var wordPigLatin = function(str){
   // scrub string for punctuation
-  //var punctuationIndices = findPunctuation(str);
+  var punctuationArray = findPunctuation(str);
   //var letterOnlyString = removeLetters(str);
 
   var firstLetter = str[0];
@@ -28,6 +28,11 @@ var wordPigLatin = function(str){
   return secondBlock + newString + firstBlock + "ay";
   //return addPunctuationConcat(punctuationIndices)
 };
+
+var findPunctuation = function(word){
+  var nonCharacReg = /[^a-zA-Z]/ig;
+  return word.match(nonCharacReg);
+}
 
 var addPunctuationConcat = function(punctuationObj, firstBlock, seconBlock, string){
 
@@ -64,17 +69,48 @@ var checkVowel = function(letter){
   return vowelRegex.test(letter);
 }
 
-// testing function
-var assertEqual = function(resultString, expectedString){
-  var report = resultString + " SHOULD EQUAL " + expectedString + "\n";
-  if(resultString === expectedString){
+
+var assertEqual = function(result, expected){
+  if(Array.isArray(result)){
+    report(result, expected, compareArray);
+  }else{
+    report(result, expected, compareString);
+  }
+};
+
+var report = function(result, expected, cb){
+  var consoleReport = result + " SHOULD EQUAL " + expected + "\n";
+  if(cb(result, expected)){
     console.log("Success");
-    console.log(report);
+    console.log(consoleReport);
   }else{
     console.log("FAILED");
-    console.log(report);
+    console.log(consoleReport);
   }
-}
+};
+
+var compareArray = function(resultArray, expected){
+  if(Array.isArray(resultArray)){
+    if(!Array.isArray(expected)){
+      console.log("Expected must be an array");
+      return;
+    }
+    for(var i=0; i<resultArray.length; i++){
+      if(!compareString(resultArray[i], expected[i])){
+        return false;
+      };
+    }
+    return true;
+  }
+};
+
+var compareString = function(resultString, expectedString){
+  if(resultString === expectedString){
+    return true;
+  } else {
+    return false;
+  }
+};
 
 assertEqual(pigLatin("hello"), "ellohay");
 assertEqual(pigLatin("hello world"), "ellohay orldway" );
@@ -82,5 +118,6 @@ assertEqual(pigLatin("Hello world"), "Ellohay orldway");
 assertEqual(pigLatin("Hello Alon"), "Ellohay Alonay");
 assertEqual(findFirstBlock("Brick"), "Br");
 assertEqual(pigLatin("Brick House"), "Ickbray Ousehay");
+assertEqual(findPunctuation("R-i_c*k's"), ["-", "_", "*", "'"]);
 assertEqual(addPunctuationConcat({4: "'"}, "r", "I", "cks"), "Ickray's");
 assertEqual(pigLatin("Rick's house is great!"), "Ickray's ousehay isay eatgray!");
