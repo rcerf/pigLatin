@@ -7,26 +7,38 @@ var pigLatin = function(str){
 var wordPigLatin = function(str){
   // scrub string for punctuation
   var punctuationArray = findPunctuation(str);
-  //var letterOnlyString = removeLetters(str);
+  var letterOnlyStr = str.replace(/[^a-zA-Z]/ig, "");
+  var firstLetter = letterOnlyStr[0];
 
-  var firstLetter = str[0];
+  var replacer = function(match){
+    var offset = arguments[1];
+    var replaceStr = newSubString || letterOnlyStr;
+    var cleanString = replaceStr[offset];
+    if(offset === arguments[2] + 1){
+      console.log("RAN");
+      cleanString + "ay";
+    }
+    console.log("replaceStr", replaceStr, "cleanString", cleanString, "match", match, "offset", offset, "arguments", arguments);
+    return cleanString;
+  };
+
   //if first letter is vowel, simple transform and return out
   if(checkVowel(firstLetter)){
-    return str + "ay";
+    return str.replace(/[a-zA-Z]*/ig, replacer) + "ay";
   }
 
-  var firstBlock = findFirstBlock(str);
-  var secondBlock = str[firstBlock.length];
-  var newString = str.slice(firstBlock.length + secondBlock.length);
+  var firstBlock = findFirstBlock(letterOnlyStr);
+  var secondBlock = letterOnlyStr[firstBlock.length];
 
   //Manage capitalization rules
-  if(firstLetter >= "A" && firstLetter <= "Z"){
+  if(firstLetter.match(/[A-Z]/g)){
     firstBlock = firstBlock.toLowerCase();
     secondBlock = secondBlock.toUpperCase();
   }
 
-  return secondBlock + newString + firstBlock + "ay";
-  //return addPunctuationConcat(punctuationIndices)
+  var newSubString = secondBlock + letterOnlyStr.slice(firstBlock.length + secondBlock.length) + firstBlock + "ay";
+
+  return str.replace(/[a-zA-Z]*/ig, replacer);
 };
 
 var findPunctuation = function(word){
