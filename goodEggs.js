@@ -1,11 +1,13 @@
-var pigLatin = function(str){
+var goodEggs = {};
+var pigLatin = goodEggs.pigLatin = function(str){
   var stringArray = str.split(" ");
   var resultArray = stringArray.map(wordPigLatin);
   return resultArray.join(" ");
 }
 
-var wordPigLatin = function(str){
+var wordPigLatin = goodEggs.wordPigLatin = function(str){
   // scrub string for punctuation
+  var endingBlock = findEndingBlock(str);
   var punctuationArray = findPunctuation(str);
   var letterOnlyStr = str.replace(/[^a-zA-Z]/ig, "");
   var firstLetter = letterOnlyStr[0];
@@ -41,16 +43,17 @@ var wordPigLatin = function(str){
   return str.replace(/[a-zA-Z]*/ig, replacer);
 };
 
-var findPunctuation = function(word){
+var findEndingBlock = goodEggs.findEndingBlock = function(word){
+  var endingBlock = /([^A-Za-z\s]{1})([A-Za-z]{0,1})/gi
+  return word.match(endingBlock);
+}
+
+var findPunctuation = goodEggs.findPunctuation = function(word){
   var nonCharacReg = /[^a-zA-Z]/ig;
   return word.match(nonCharacReg);
 }
 
-var addPunctuationConcat = function(punctuationObj, firstBlock, seconBlock, string){
-
-}
-
-var findFirstBlock = function(word){
+var findFirstBlock = goodEggs.findFirstBlock = function(word){
   var letterArray = word.split("");
   var firstBlock = "";
   var location = 0;
@@ -72,64 +75,13 @@ var findFirstBlock = function(word){
 
   return firstBlock;
 }
-var checkConsonant = function(letter){
+var checkConsonant = goodEggs.checkConsonant = function(letter){
   var consoRegEx = /[bcdfghjklmnpqrstvwxyz]+/i;
   return consoRegex.test(letter);
 }
 var checkVowel = function(letter){
   var vowelRegex = /[aeiou]+/i;
   return vowelRegex.test(letter);
-}
-
-
-var assertEqual = function(result, expected){
-  if(Array.isArray(result)){
-    report(result, expected, compareArray);
-  }else{
-    report(result, expected, compareString);
-  }
 };
 
-var report = function(result, expected, cb){
-  var consoleReport = result + " SHOULD EQUAL " + expected + "\n";
-  if(cb(result, expected)){
-    console.log("Success");
-    console.log(consoleReport);
-  }else{
-    console.log("FAILED");
-    console.log(consoleReport);
-  }
-};
-
-var compareArray = function(resultArray, expected){
-  if(Array.isArray(resultArray)){
-    if(!Array.isArray(expected)){
-      console.log("Expected must be an array");
-      return;
-    }
-    for(var i=0; i<resultArray.length; i++){
-      if(!compareString(resultArray[i], expected[i])){
-        return false;
-      };
-    }
-    return true;
-  }
-};
-
-var compareString = function(resultString, expectedString){
-  if(resultString === expectedString){
-    return true;
-  } else {
-    return false;
-  }
-};
-
-assertEqual(pigLatin("hello"), "ellohay");
-assertEqual(pigLatin("hello world"), "ellohay orldway" );
-assertEqual(pigLatin("Hello world"), "Ellohay orldway");
-assertEqual(pigLatin("Hello Alon"), "Ellohay Alonay");
-assertEqual(findFirstBlock("Brick"), "Br");
-assertEqual(pigLatin("Brick House"), "Ickbray Ousehay");
-assertEqual(findPunctuation("R-i_c*k's"), ["-", "_", "*", "'"]);
-assertEqual(addPunctuationConcat({4: "'"}, "r", "I", "cks"), "Ickray's");
-assertEqual(pigLatin("Rick's house is great!"), "Ickray's ousehay isay eatgray!");
+exports.goodEggs = goodEggs;
