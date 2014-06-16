@@ -45,7 +45,9 @@ var wordPigLatin = goodEggs.wordPigLatin = function(str){
 
 var findEndingBlock = goodEggs.findEndingBlock = function(word){
   var endingBlock = /([^A-Za-z\s]{1})([A-Za-z]{0,1})/gi
-  return word.match(endingBlock);
+  var resultArray = word.match(endingBlock);
+  console.log("EndingBlock", resultArray);
+  return resultArray ? resultArray.join('') : resultArray;
 }
 
 var findPunctuation = goodEggs.findPunctuation = function(word){
