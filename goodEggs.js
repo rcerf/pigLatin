@@ -6,31 +6,26 @@ var pigLatin = goodEggs.pigLatin = function(str){
 }
 
 var wordPigLatin = goodEggs.wordPigLatin = function(str){
-  // scrub string for punctuation
-  var endingBlock = findEndingBlock(str);
-  var punctuationArray = findPunctuation(str);
-  var letterOnlyStr = str.replace(/[^a-zA-Z]/ig, "");
-  var firstLetter = letterOnlyStr[0];
+  // grab possesive or contraction endingblock
+  var endingBlock = findEndingBlock(str) || "";
+  var subString = str.slice(0, str.length - endingBlock.length);
 
-  var replacer = function(match){
-    var offset = arguments[1];
-    var replaceStr = newSubString || letterOnlyStr;
-    var cleanString = replaceStr[offset];
-    if(offset === arguments[2] + 1){
-      console.log("RAN");
-      cleanString + "ay";
-    }
-    console.log("replaceStr", replaceStr, "cleanString", cleanString, "match", match, "offset", offset, "arguments", arguments);
-    return cleanString;
-  };
+  // scrub string for punctuation and endingblock
+  var letterOnlyStr = subString.replace(/[^a-zA-Z]/g, "");
+
+  // check to see if string starts with a vowel
+  var firstLetter = letterOnlyStr[0];
 
   //if first letter is vowel, simple transform and return out
   if(checkVowel(firstLetter)){
-    return str.replace(/[a-zA-Z]*/ig, replacer) + "ay";
+    return subString.replace(/([a-zA-Z]+)/ig, replacer)
+           + "ay"
+           + endingBlock;
   }
 
   var firstBlock = findFirstBlock(letterOnlyStr);
   var secondBlock = letterOnlyStr[firstBlock.length];
+  var subSubString = letterOnlyStr.slice(firstBlock.length + secondBlock.length);
 
   //Manage capitalization rules
   if(firstLetter.match(/[A-Z]/g)){
@@ -38,15 +33,25 @@ var wordPigLatin = goodEggs.wordPigLatin = function(str){
     secondBlock = secondBlock.toUpperCase();
   }
 
-  var newSubString = secondBlock + letterOnlyStr.slice(firstBlock.length + secondBlock.length) + firstBlock + "ay";
+  var cleanString = secondBlock
+                  + subSubString
+                  + firstBlock;
 
-  return str.replace(/[a-zA-Z]*/ig, replacer);
+  return subString.replace(/([a-zA-Z]+)/g, replacer)
+         + "ay"
+         + endingBlock;
+
+  function replacer(match, p1, offset, string){
+    var cleanSubString = cleanString ?
+                         cleanString.slice(offset, offset + match.length) :
+                         letterOnlyStr.slice(offset, offset + match.length);
+    return cleanSubString;
+  }
 };
 
 var findEndingBlock = goodEggs.findEndingBlock = function(word){
   var endingBlock = /([^A-Za-z\s]{1})([A-Za-z]{0,1})/gi
   var resultArray = word.match(endingBlock);
-  console.log("EndingBlock", resultArray);
   return resultArray ? resultArray.join('') : resultArray;
 }
 
