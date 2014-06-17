@@ -24,7 +24,7 @@ var wordPigLatin = goodEggs.wordPigLatin = function(str){
   }
 
   var firstBlock = findFirstBlock(letterOnlyStr);
-  var secondBlock = letterOnlyStr[firstBlock.length];
+  var secondBlock = letterOnlyStr[firstBlock.length] || "";
   var subSubString = letterOnlyStr.slice(firstBlock.length + secondBlock.length);
 
   //Manage capitalization rules

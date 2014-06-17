@@ -51,3 +51,5 @@ assertEqual(goodEggs.findFirstBlock("Brick"), "Br");
 assertEqual(goodEggs.pigLatin("Brick House"), "Ickbray Ousehay");
 assertEqual(goodEggs.findPunctuation("R-i_c*k's"), ["-", "_", "*", "'"]);
 assertEqual(goodEggs.pigLatin("Rick's house is great!"), "Ickray's ousehay isay eatgray!");
+assertEqual(goodEggs.pigLatin("Hello, my name is Rick. I can't make it to the beach today"),
+  "Ellohay, myay amenay isay Ickray. Iay ancay't akemay itay otay ethay eachbay odaytay");
